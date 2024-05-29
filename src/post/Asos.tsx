@@ -3,18 +3,23 @@ import { useState } from "react";
 
 
 function Asos() {
-    const [ustun1, setUStun1]=useState<any>([{id:1, name:'Hlo'}, {id:5, name:'H'}]);
-    const [ustun2, setUStun2]=useState<any>([{id:2, name:'Hell'}])
-    const [ustun3, setUStun3]=useState<any>([{id:3, name:'Heo'}])
+    const [ustun1, setUStun1]=useState<any>([{id:1, name:'Ustun 1'}]);
+    const [ustun2, setUStun2]=useState<any>([{id:2, name:'Ustun 2'}]);
+    const [ustun3, setUStun3]=useState<any>([{id:3, name:'Ustun 3'}]);
+    const [input, setInput]=useState({i1:false, i2:false, i3:false});
+    const [in1, setIn1]=useState<string>('');
+    const [in2, setIn2]=useState<string>('');
+    const [in3, setIn3]=useState<string>('');
+
 
     function Drag(e:any){
-      console.log(e);
+    
       let mal={};
       if (e.source.droppableId=='a') {
         let arr=[...ustun1]
 
         mal=JSON.parse(JSON.stringify(arr[e.source.index]));
-        console.log(mal);
+    
         
         arr.splice(e.source.index, 1)
         if (e.destination.droppableId=='a') {
@@ -22,7 +27,7 @@ function Asos() {
           setUStun1(arr);
           return;
         }
-        console.log(arr);
+      
         
         setUStun1(arr)
         
@@ -31,7 +36,7 @@ function Asos() {
         let arr=[...ustun2]
      
         mal=JSON.parse(JSON.stringify(arr[e.source.index]));
-        console.log(mal);
+        
         
         arr.splice(e.source.index, 1)
         if (e.destination.droppableId=='b') {
@@ -39,7 +44,7 @@ function Asos() {
           setUStun2(arr);
           return;
         }
-        console.log(arr);
+
         
         setUStun2(arr)
   
@@ -48,7 +53,7 @@ function Asos() {
         let arr=[...ustun3]
 
         mal=JSON.parse(JSON.stringify(arr[e.source.index]));
-        console.log(mal);
+    
         
         arr.splice(e.source.index, 1)
         if (e.destination.droppableId=='c') {
@@ -56,7 +61,7 @@ function Asos() {
           setUStun3(arr);
           return;
         }
-        console.log(arr);
+    
         
         setUStun3(arr)
         
@@ -67,33 +72,54 @@ function Asos() {
       if (e.destination.droppableId=='a') {
         let arr=[...ustun1];
         arr.splice(e.destination.index, 0 , mal);
-        console.log(arr);
+      
         
         setUStun1(arr)
       }
       if (e.destination.droppableId=='b') {
         let arr=[...ustun2];
         arr.splice(e.destination.index, 0 , mal);
-        console.log(arr);
+  
         
         setUStun2(arr)
       }
       if (e.destination.droppableId=='c') {
         let arr=[...ustun3];
         arr.splice(e.destination.index, 0 , mal);
-        console.log(arr);
+    
         
         setUStun3(arr)
       }
       
     }
 
+    document.addEventListener('keypress', (e)=>{
+    
+      if (e.key=='Enter') {
+    
+        if (input.i1 && in1.trim()) {
+          setUStun1([...ustun1, {id:Date.now(), name:in1}]);
+          setIn1('')
+        }  
+        if (input.i2 && in2.trim()) {
+          setUStun2([...ustun2, {id:Date.now(), name:in2}]);
+          setIn2('')
+        }
+        if (input.i3 && in3.trim()) {
+          setUStun3([...ustun3, {id:Date.now(), name:in3}]);
+          setIn3('')
+        }      
+        setInput({i1:false, i2:false, i3:false})
+      }
+      
+    })
+
 
 
   return (
-    <div>
+    <div className="w-[1200px] mx-auto mt-10">
       <DragDropContext onDragEnd={e=>Drag(e)}>
-        <div className="flex">
+        <div className="flex justify-between">
           <Droppable droppableId={'a'}>
             {(provided, snapshot) => (
               <div
@@ -105,7 +131,10 @@ function Asos() {
                   flexDirection: "column",
                   borderRadius: 5,
                   padding: "5px",
+                  width:'350px',
+                  boxShadow:'0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0)'
                 }}
+              
               >
                 {ustun1.map((post:any, index:any) => (
                   <Draggable key={index} draggableId={String(post.id)} index={index}>
@@ -114,6 +143,7 @@ function Asos() {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
+                        className="border m-2 p-1"
                       >
                         {post.name}
                       </div>
@@ -121,7 +151,8 @@ function Asos() {
                   </Draggable>
                 ))}
                 {provided.placeholder}
-                <button className="border px-4 py-1 bg-blue-500 text-white">+ Qator qo'shish</button>
+                <input type="text" value={in1} onChange={e=>setIn1(e.target.value)} className={`border-blue-300 mb-2 border-2  ${input.i1 ? 'flex':'hidden'}` }/>
+                <button className="border rounded px-4 py-1 bg-blue-500 text-white" onClick={()=>setInput({i1:true, i2:false, i3:false})}>+ Qator qo'shish</button>
               </div>
             )}
           </Droppable>
@@ -137,6 +168,8 @@ function Asos() {
                   flexDirection: "column",
                   borderRadius: 5,
                   padding: "5px",
+                  width:'350px',
+                  boxShadow:'0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0)'
                 }}
               >
                 {ustun2.map((post:any, index:any) => (
@@ -146,6 +179,7 @@ function Asos() {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
+                        className="border m-2 p-1"
                       >
                         {post.name}
                       </div>
@@ -153,7 +187,8 @@ function Asos() {
                   </Draggable>
                 ))}
                 {provided.placeholder}
-                <button className="border px-4 py-1 bg-blue-500 text-white">+ Qator qo'shish</button>
+                <input type="text"  value={in2} onChange={e=>setIn2(e.target.value)} className={`border-blue-300 mb-2 border-2  ${input.i2 ? 'flex':'hidden'}` }/>
+                <button className="border rounded px-4 py-1 bg-blue-500 text-white"  onClick={()=>setInput({i1:false, i2:true, i3:false})}>+ Qator qo'shish</button>
               </div>
             )}
           </Droppable>
@@ -168,6 +203,8 @@ function Asos() {
                   flexDirection: "column",
                   borderRadius: 5,
                   padding: "5px",
+                                    width:'350px',
+                  boxShadow:'0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0)'
                 }}
               >
                 {ustun3.map((post:any, index:any) => (
@@ -177,14 +214,16 @@ function Asos() {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
+                        className="border m-2 p-1"
                       >
-                        {post.name}
+                      <p>{post.name}</p>
                       </div>
                     )}
                   </Draggable>
                 ))}
                 {provided.placeholder}
-                <button className="border px-4 py-1 bg-blue-500 text-white">+ Qator qo'shish</button>
+                <input type="text"  value={in3} onChange={e=>setIn3(e.target.value)} className={`border-blue-300 mb-2 border-2  ${input.i3 ? 'flex':'hidden'}` }/>
+                <button className="border rounded px-4 py-1 bg-blue-500 text-white"  onClick={()=>setInput({i1:false, i2:false, i3:true})}>+ Qator qo'shish</button>
               </div>
             )}
           </Droppable>
